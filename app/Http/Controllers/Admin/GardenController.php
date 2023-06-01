@@ -88,7 +88,7 @@ class GardenController extends Controller
             toast('Garden data store successfully', 'success');
             DB::commit();
             return redirect()->route('admin.garden.index');
-            
+
         } catch (\Throwable $e) {
             report($e);
             DB::rollback();
@@ -145,7 +145,7 @@ class GardenController extends Controller
      */
     public function edit(Garden $garden)
     {
-        return view('admin.caste.edit', compact('garden'));
+        return view('admin.garden.edit', compact('garden'));
     }
 
     /**
@@ -156,23 +156,26 @@ class GardenController extends Controller
         DB::beginTransaction();
         try {
             $validate = Validator::make($request->all(), [
-                'caste_name_en' => 'required|max:55',
-                'caste_name_bn' => 'required|max:55',
-                'caste_image' => 'nullable|image',
+                'garden_name_en' => 'required|max:155',
+                'garden_name_bn' => 'required|max:155',
+                'garden_location_en' => 'required|max:155',
+                'garden_location_bn' => 'required|max:155',
+                'garden_image' => 'nullable|image',
             ]);
             if ($validate->fails()) {
                 return back()->withErrors($validate->errors())->withInput();
             }
 
             $garden->update([
-                'caste_name_en' => $request->caste_name_en,
-                'caste_name_bn' => $request->caste_name_bn,
-                'caste_slug_en' => Str::slug($request->caste_name_en, '-'),
+                'garden_name_en' => $request->garden_name_en,
+                'garden_name_bn' => $request->garden_name_bn,
+                'garden_location_en' => $request->garden_location_en,
+                'garden_location_bn' => $request->garden_location_bn,
                 'status'        => $request->status ?: 0,
             ]);
 
             $image = $request->file('garden_image');
-            $slug = Str::slug($request->caste_name_en, '-');
+            $slug = Str::slug($request->garden_name_en, '-');
             if($image){
                 if ($request->old_garden_image) {
                     Storage::disk('public')->delete($request->old_garden_image);
@@ -189,7 +192,7 @@ class GardenController extends Controller
             $garden->save();
             toast('Garden data updated successfully', 'success');
             DB::commit();
-            return redirect()->route('admin.caste.index');
+            return redirect()->route('admin.garden.index');
         } catch (\Throwable $e) {
             report($e);
             DB::rollback();
