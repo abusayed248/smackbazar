@@ -7,6 +7,7 @@ use App\Http\Controllers\Admin\CategoryController;
 use App\Http\Controllers\Admin\FruitcasteController;
 use App\Http\Controllers\Admin\GardenController;
 use App\Http\Controllers\Admin\SubcatController;
+use App\Http\Controllers\Admin\WebsiteSettingController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -67,6 +68,11 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.','middleware' => 'auth:admin'
     Route::get('/garden-status/active/{garden}', [GardenController::class, 'activeStatus'])->name('garden.status.active');
     Route::get('/garden-status/inactive/{garden}', [GardenController::class, 'inactiveStatus'])->name('garden.status.inactive');
     // ================= Garden route end ======================//
+
+    // ================= Website Setting route start ======================//
+    Route::get('website-setting', [WebsiteSettingController::class, 'edit'])->name('website-setting.edit');
+    Route::post('website-setting/update/{websiteSetting}', [WebsiteSettingController::class, 'update'])->name('website-setting.update');
+    // ================= Website Setting route end ======================//
 
 
 
