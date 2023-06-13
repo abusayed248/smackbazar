@@ -55,16 +55,22 @@
                     </nav>
                 </div>
 
-                <a class="nav-link collapsed" href="#" data-bs-toggle="collapse" data-bs-target="#WebsiteSetting" aria-expanded="false" aria-controls="WebsiteSetting">
+                <a class="nav-link collapsed" href="#" data-bs-toggle="collapse" data-bs-target="#product" aria-expanded="false" aria-controls="product">
                     <div class="sb-nav-link-icon"><i class="fas fa-book-open"></i></div>
-                    Website Setting
+                    Product
                     <div class="sb-sidenav-collapse-arrow"><i class="fas fa-angle-down"></i></div>
                 </a>
-                <div class="collapse" id="WebsiteSetting" aria-labelledby="headingOne" data-bs-parent="#sidenavAccordion">
+                <div class="collapse" id="product" aria-labelledby="headingOne" data-bs-parent="#sidenavAccordion">
                     <nav class="sb-sidenav-menu-nested nav">
-                        <a class="nav-link" href="{{ route('admin.website-setting.edit') }}">Edit Website Setting</a>
+                        <a class="nav-link" href="{{ route('admin.product.index') }}">All Products</a>
+                        <a class="nav-link" href="{{ route('admin.product.create') }}">Create Product</a>
                     </nav>
                 </div>
+
+                <a class="nav-link" href="{{ route('admin.website-setting.edit') }}" >
+                    <div class="sb-nav-link-icon"><i class="fas fa-book-open"></i></div>
+                    Website Setting
+                </a>
 
             </div>
         </div>

@@ -6,6 +6,7 @@ use App\Http\Controllers\Admin\AdminController;
 use App\Http\Controllers\Admin\CategoryController;
 use App\Http\Controllers\Admin\FruitcasteController;
 use App\Http\Controllers\Admin\GardenController;
+use App\Http\Controllers\Admin\ProductController;
 use App\Http\Controllers\Admin\SubcatController;
 use App\Http\Controllers\Admin\WebsiteSettingController;
 use Illuminate\Support\Facades\Route;
@@ -68,6 +69,16 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.','middleware' => 'auth:admin'
     Route::get('/garden-status/active/{garden}', [GardenController::class, 'activeStatus'])->name('garden.status.active');
     Route::get('/garden-status/inactive/{garden}', [GardenController::class, 'inactiveStatus'])->name('garden.status.inactive');
     // ================= Garden route end ======================//
+
+    // ================= Product route start ======================//
+    Route::resource('product', ProductController::class);
+    Route::get('/product-delete/{product}', [ProductController::class, 'destroy'])->name('product.destroy');
+    Route::get('/product-status/active/{product}', [ProductController::class, 'activeStatus'])->name('product.status.active');
+    Route::get('/product-status/inactive/{product}', [ProductController::class, 'inactiveStatus'])->name('product.status.inactive');
+    // slider route
+    Route::get('/product-slider/active/{product}', [ProductController::class, 'activeSlider'])->name('product.slider.active');
+    Route::get('/product-slider/inactive/{product}', [ProductController::class, 'inactiveSlider'])->name('product.slider.inactive');
+    // ================= Product route end ======================//
 
     // ================= Website Setting route start ======================//
     Route::get('website-setting', [WebsiteSettingController::class, 'edit'])->name('website-setting.edit');
