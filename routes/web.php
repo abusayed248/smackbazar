@@ -9,6 +9,8 @@ use App\Http\Controllers\Admin\GardenController;
 use App\Http\Controllers\Admin\ProductController;
 use App\Http\Controllers\Admin\SubcatController;
 use App\Http\Controllers\Admin\WebsiteSettingController;
+use App\Http\Controllers\Frontend\IndexController;
+use App\Http\Controllers\Frontend\LanguageController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -22,10 +24,6 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-
-Route::get('/', function () {
-    return view('welcome');
-});
 
 Auth::routes();
 
@@ -85,6 +83,9 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.','middleware' => 'auth:admin'
     Route::post('website-setting/update/{websiteSetting}', [WebsiteSettingController::class, 'update'])->name('website-setting.update');
     // ================= Website Setting route end ======================//
 
-
-
 });
+
+// ====================== frontend route ======================= //
+Route::get('/', [IndexController::class, 'index'])->name('frontend.index');
+Route::get('/switch-bangla/language', [LanguageController::class, 'banglaLang'])->name('switch.lang.bangla');
+Route::get('/switch-english/language', [LanguageController::class, 'englishLang'])->name('switch.lang.english');
