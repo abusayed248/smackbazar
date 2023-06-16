@@ -45,5 +45,23 @@
 	<script src="{{ asset('frontend') }}/js/jquery.zoom.min.js"></script>
 	<script src="{{ asset('frontend') }}/js/main.js"></script>
     @include('sweetalert::alert')
+
+	<script type="text/javascript">
+		function cart() {
+			$.ajax({
+				url: '{{ route('product.view.cart') }}',
+				type: 'get',
+				success: function (data) {
+					// console.log(data.price, 'mycart')
+					$('#cart_total').append(data.price)
+					$('#cart_qty').append(data.qty)
+				}
+			});
+		}
+
+		$(document).ready(function () {
+			cart()
+		});
+	</script>
 </body>
 </html>

@@ -54,7 +54,7 @@
                             @else 
                             <h3 class="white-color font-weak">{{ bn_date(number_format($percentage, 2, '.')) }}% পর্যন্ত ছাড়</h3>
                             @endif
-                            <button class="primary-btn">@if(session()->get('lang') == 'eng') Shop Now @else এখনই কিনুন @endif</button>
+                            <a style="color: #fff;" href="{{ route('product.details',['id' => $sliderProduct->id, 'slug' => $sliderProduct->p_slug_en]) }}" class="primary-btn">@if(session()->get('lang') == 'eng') Shop Now @else এখনই কিনুন @endif</a>
                         </div>
                     </div>
                     @endforeach
@@ -105,34 +105,44 @@
 
                             @foreach($todayDealProducts as $todayDealProduct)
                             <div class="product product-single">
-                                <div class="product-thumb">
-                                    @if($todayDealProduct->discount_price)
-                                    @php
-                                        $price = ($todayDealProduct->regular_price-$todayDealProduct->discount_price)*100;
-                                        $percentage = $price/$todayDealProduct->regular_price;
-                                    @endphp
-                                    <div class="product-label">
-                                        <span class="sale">@if(session()->get('lang') == 'eng'){{ number_format($percentage, 0, '.') }}@else {{ bn_date(number_format($percentage, 0, '.')) }} @endif% </span>
-                                    </div>
-                                    @endif
-        
-                                    <button class="main-btn quick-view"><i class="fa fa-search-plus"></i> Quick view</button>
-                                    <img src="{{ asset('storage/'.$todayDealProduct->thumbnail) }}" alt="">
-                                </div>
-                                <div class="product-body text-center">
+                                <form action="{{ route('product.add_to_cart') }}" method="post">
+                                    @csrf
+                                    <input type="hidden" name="product_id" value="{{ $todayDealProduct->id }}">
 
-                                    @if($todayDealProduct->discount_price) 
-                                    <h3 class="product-price">৳@if(session()->get('lang') == 'eng') {{ $todayDealProduct->discount_price }} @else {{ bn_date($todayDealProduct->discount_price) }} @endif<del class="product-old-price">৳@if(session()->get('lang') == 'eng') {{ $todayDealProduct->regular_price }} @else {{ bn_date($todayDealProduct->regular_price) }} @endif</del></h3>
-                                    @else
-                                    <h3 class="product-price">৳@if(session()->get('lang') == 'eng') {{ $todayDealProduct->regular_price }}@else {{ bn_date($todayDealProduct->regular_price) }} @endif</h3>
-                                    @endif
-
-                                    <h2 class="product-name"><a href="#">@if(session()->get('lang') == 'eng') {{ $todayDealProduct->p_name_en }}@else {{ $todayDealProduct->p_name_bn }}@endif</a></h2>
-                                    <div class="product-btns">
-                                        <button class="main-btn icon-btn"><i class="fa fa-heart"></i></button>
-                                        <button class="primary-btn add-to-cart"><i class="fa fa-shopping-cart"></i> Add to Cart</button>
+                                    <div class="product-thumb">
+                                        @if($todayDealProduct->discount_price)
+                                        @php
+                                            $price = ($todayDealProduct->regular_price-$todayDealProduct->discount_price)*100;
+                                            $percentage = $price/$todayDealProduct->regular_price;
+                                        @endphp
+                                        <div class="product-label">
+                                            <span class="sale">@if(session()->get('lang') == 'eng'){{ number_format($percentage, 0, '.') }}@else {{ bn_date(number_format($percentage, 0, '.')) }} @endif% </span>
+                                        </div>
+                                        @endif
+            
+                                        <img src="{{ asset('storage/'.$todayDealProduct->thumbnail) }}" alt="">
                                     </div>
-                                </div>
+                                    <div class="product-body text-center">
+
+                                        @if($todayDealProduct->discount_price) 
+                                        <h3 class="product-price">৳@if(session()->get('lang') == 'eng') {{ $todayDealProduct->discount_price }} @else {{ bn_date($todayDealProduct->discount_price) }} @endif<del class="product-old-price">৳@if(session()->get('lang') == 'eng') {{ $todayDealProduct->regular_price }} @else {{ bn_date($todayDealProduct->regular_price) }} @endif</del></h3>
+                                        @else
+                                        <h3 class="product-price">৳@if(session()->get('lang') == 'eng') {{ $todayDealProduct->regular_price }}@else {{ bn_date($todayDealProduct->regular_price) }} @endif</h3>
+                                        @endif
+
+                                        @if($todayDealProduct->stock_qty >= 1)
+                                        <div class="product-rating">
+                                            @if(session()->get('lang') == 'eng') {{ $todayDealProduct->stock_qty }} In stock @else {{ bn_date($todayDealProduct->stock_qty) }} স্টক এ আছে @endif
+                                        </div>
+                                        @endif
+
+                                        <h2 class="product-name"><a href="{{ route('product.details',['id' => $todayDealProduct->id, 'slug' => $todayDealProduct->p_slug_en]) }}">@if(session()->get('lang') == 'eng') {{ $todayDealProduct->p_name_en }}@else {{ $todayDealProduct->p_name_bn }}@endif</a></h2>
+                                        <div class="product-btns">
+                                            <button class="main-btn icon-btn"><i class="fa fa-heart"></i></button>
+                                            <button type="submit" class="primary-btn add-to-cart"><i class="fa fa-shopping-cart"></i>  @if(session()->get('lang') == 'eng') Add to Cart @else কার্টে যোগ করুন @endif</button>
+                                        </div>
+                                    </div>
+                                </form>
                             </div>
                             @endforeach
                             <!-- /Product Single -->
@@ -175,7 +185,6 @@
                                     </div>
                                     @endif
         
-                                    <button class="main-btn quick-view"><i class="fa fa-search-plus"></i> Quick view</button>
                                     <img src="{{ asset('storage/'.$hotDealProduct->thumbnail) }}" alt="">
                                 </div>
                                 <div class="product-body text-center">
@@ -186,10 +195,16 @@
                                     <h3 class="product-price">৳@if(session()->get('lang') == 'eng') {{ $hotDealProduct->regular_price }}@else {{ bn_date($hotDealProduct->regular_price) }} @endif</h3>
                                     @endif
 
-                                    <h2 class="product-name"><a href="#">@if(session()->get('lang') == 'eng') {{ $hotDealProduct->p_name_en }}@else {{ $hotDealProduct->p_name_bn }}@endif</a></h2>
+                                    @if($hotDealProduct->stock_qty >= 1)
+                                    <div class="product-rating">
+                                        @if(session()->get('lang') == 'eng') {{ $hotDealProduct->stock_qty }} In stock @else {{ bn_date($hotDealProduct->stock_qty) }} স্টক এ আছে @endif
+                                    </div>
+                                    @endif
+
+                                    <h2 class="product-name"><a href="{{ route('product.details',['id' => $hotDealProduct->id, 'slug' => $hotDealProduct->p_slug_en]) }}">@if(session()->get('lang') == 'eng') {{ $hotDealProduct->p_name_en }}@else {{ $hotDealProduct->p_name_bn }}@endif</a></h2>
                                     <div class="product-btns">
                                         <button class="main-btn icon-btn"><i class="fa fa-heart"></i></button>
-                                        <button class="primary-btn add-to-cart"><i class="fa fa-shopping-cart"></i> Add to Cart</button>
+                                        <button class="primary-btn add-to-cart"><i class="fa fa-shopping-cart"></i> @if(session()->get('lang') == 'eng') Add to Cart @else কার্টে যোগ করুন @endif</button>
                                     </div>
                                 </div>
                             </div>
@@ -226,7 +241,6 @@
                 <div class="col-md-3 col-sm-6 col-xs-6">
                     <div class="product product-single">
                         <div class="product-thumb">
-                            <button class="main-btn quick-view"><i class="fa fa-search-plus"></i> Quick view</button>
                             <img src="{{ asset('frontend') }}/img/product01.jpg" alt="">
                         </div>
                         <div class="product-body">
@@ -257,7 +271,6 @@
                                 <span>New</span>
                                 <span class="sale">-20%</span>
                             </div>
-                            <button class="main-btn quick-view"><i class="fa fa-search-plus"></i> Quick view</button>
                             <img src="{{ asset('frontend') }}/img/product02.jpg" alt="">
                         </div>
                         <div class="product-body">
@@ -288,7 +301,6 @@
                                 <span>New</span>
                                 <span class="sale">-20%</span>
                             </div>
-                            <button class="main-btn quick-view"><i class="fa fa-search-plus"></i> Quick view</button>
                             <img src="{{ asset('frontend') }}/img/product03.jpg" alt="">
                         </div>
                         <div class="product-body">
@@ -318,7 +330,6 @@
                             <div class="product-label">
                                 <span>New</span>
                             </div>
-                            <button class="main-btn quick-view"><i class="fa fa-search-plus"></i> Quick view</button>
                             <img src="{{ asset('frontend') }}/img/product04.jpg" alt="">
                         </div>
                         <div class="product-body">
@@ -365,7 +376,6 @@
                                 <span>New</span>
                                 <span class="sale">-20%</span>
                             </div>
-                            <button class="main-btn quick-view"><i class="fa fa-search-plus"></i> Quick view</button>
                             <img src="{{ asset('frontend') }}/img/product07.jpg" alt="">
                         </div>
                         <div class="product-body">
@@ -396,7 +406,6 @@
                                 <span>New</span>
                                 <span class="sale">-20%</span>
                             </div>
-                            <button class="main-btn quick-view"><i class="fa fa-search-plus"></i> Quick view</button>
                             <img src="{{ asset('frontend') }}/img/product06.jpg" alt="">
                         </div>
                         <div class="product-body">
@@ -427,7 +436,6 @@
                                 <span>New</span>
                                 <span class="sale">-20%</span>
                             </div>
-                            <button class="main-btn quick-view"><i class="fa fa-search-plus"></i> Quick view</button>
                             <img src="{{ asset('frontend') }}/img/product05.jpg" alt="">
                         </div>
                         <div class="product-body">
@@ -466,7 +474,6 @@
                 <div class="col-md-3 col-sm-6 col-xs-6">
                     <div class="product product-single">
                         <div class="product-thumb">
-                            <button class="main-btn quick-view"><i class="fa fa-search-plus"></i> Quick view</button>
                             <img src="{{ asset('frontend') }}/img/product04.jpg" alt="">
                         </div>
                         <div class="product-body">
@@ -496,7 +503,6 @@
                             <div class="product-label">
                                 <span>New</span>
                             </div>
-                            <button class="main-btn quick-view"><i class="fa fa-search-plus"></i> Quick view</button>
                             <img src="{{ asset('frontend') }}/img/product03.jpg" alt="">
                         </div>
                         <div class="product-body">
@@ -526,7 +532,6 @@
                             <div class="product-label">
                                 <span class="sale">-20%</span>
                             </div>
-                            <button class="main-btn quick-view"><i class="fa fa-search-plus"></i> Quick view</button>
                             <img src="{{ asset('frontend') }}/img/product02.jpg" alt="">
                         </div>
                         <div class="product-body">
@@ -557,7 +562,6 @@
                                 <span>New</span>
                                 <span class="sale">-20%</span>
                             </div>
-                            <button class="main-btn quick-view"><i class="fa fa-search-plus"></i> Quick view</button>
                             <img src="{{ asset('frontend') }}/img/product01.jpg" alt="">
                         </div>
                         <div class="product-body">
