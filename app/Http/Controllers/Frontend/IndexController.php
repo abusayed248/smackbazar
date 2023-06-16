@@ -24,9 +24,13 @@ class IndexController extends Controller
     /**
      * Show the form for creating a new resource.
      */
-    public function create()
+    public function productDetails($id, $slug)
     {
-        //
+        $singleProduct   = Product::where('p_slug_en', $slug)->first();
+        $pd_views = Product::find($id);
+        $pd_views->increment('p_views');
+        $relatedProducts = Product::where(['status' => 1, 'subcat_id' => $singleProduct->subcat_id])->get();
+        return view('frontend.product_details', compact('singleProduct', 'relatedProducts'));
     }
 
     /**

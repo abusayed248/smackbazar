@@ -9,8 +9,10 @@ use App\Http\Controllers\Admin\GardenController;
 use App\Http\Controllers\Admin\ProductController;
 use App\Http\Controllers\Admin\SubcatController;
 use App\Http\Controllers\Admin\WebsiteSettingController;
+use App\Http\Controllers\Frontend\CartController;
 use App\Http\Controllers\Frontend\IndexController;
 use App\Http\Controllers\Frontend\LanguageController;
+use App\Http\Controllers\Frontend\UserSettingController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -86,6 +88,17 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.','middleware' => 'auth:admin'
 });
 
 // ====================== frontend route ======================= //
+// user setting start
+Route::get('/user/logout', [UserSettingController::class, 'userLogout'])->name('user.logout');
+// user setting end
+
 Route::get('/', [IndexController::class, 'index'])->name('frontend.index');
 Route::get('/switch-bangla/language', [LanguageController::class, 'banglaLang'])->name('switch.lang.bangla');
 Route::get('/switch-english/language', [LanguageController::class, 'englishLang'])->name('switch.lang.english');
+
+// product details
+Route::get('/products/{id}/{slug}', [IndexController::class, 'productDetails'])->name('product.details');
+
+// product add to cart
+Route::post('/products/add-to-cart', [CartController::class, 'addToCart'])->name('product.add_to_cart');
+Route::get('/product/view-cart', [CartController::class, 'viewCart'])->name('product.view.cart');
